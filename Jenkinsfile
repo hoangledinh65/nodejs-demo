@@ -43,7 +43,7 @@ pipeline {
                 sh 'docker network create jenkins || echo "this network exists"'
                 sh 'echo y | docker container prune '
                 sh 'echo y | docker image prune'
-                sh 'docker container run -d --rm --name my-demo-nodejs -p 3000:3000 -p 3001:3001 --network jenkins hoangledinh65/nodejs-image:1.0'
+                sh 'docker container run -d --rm --name my-demo-nodejs -p 3000:8080 --network jenkins hoangledinh65/nodejs-image:1.0'
             }
         }
     }
