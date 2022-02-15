@@ -29,7 +29,8 @@ pipeline {
             steps {
                 sh 'echo test stage'
                 sh 'npm install -y'
-                sh 'node app.js'
+                sh 'node app.js &'
+                sh 'node --version'
             }
         }
         stage('Build') {
