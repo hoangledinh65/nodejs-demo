@@ -28,7 +28,7 @@ pipeline {
 
             steps {
                 sh 'echo test stage'
-                sh 'npm install'
+                sh 'npm install -y'
                 sh 'node app.js'
             }
         }
