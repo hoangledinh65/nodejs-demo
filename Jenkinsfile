@@ -19,6 +19,19 @@ pipeline {
                 ''' 
             }
         }
+        stage ('Test app.js file') {
+            agent {
+                docker { 
+                    image 'node:latest'
+                }
+            }
+
+            steps {
+                sh 'echo test stage'
+                sh 'npm install'
+                sh 'node app.js'
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building nodejs image..'
