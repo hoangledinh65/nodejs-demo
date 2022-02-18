@@ -8,7 +8,10 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+        DOCKER_IMAGE_NAME = 'hoangledinh65/nodejs-image:1.0'
+        PARAM1 = $DEPLOY_ENV
     }
+    parameters { string(name: 'DEPLOY_ENV', defaultValue: 'staging', description: '') }
     stages {
 
         stage('Initialize') {
@@ -16,6 +19,7 @@ pipeline {
                 sh '''
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
+                    echo $PARAM1
                 ''' 
             }
         }
@@ -36,7 +40,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building nodejs image..'
-                sh 'docker build -t hoangledinh65/nodejs-image:1.0 .'
+                sh 'docker build -t $DOCKER_IMAGE_NAME .'
                 
             }
         }
@@ -45,19 +49,19 @@ pipeline {
                 echo 'Start pushing.. with credential'
                 sh 'echo $DOCKERHUB_CREDENTIALS'
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push hoangledinh65/nodejs-image:1.0'
+                sh 'docker push $DOCKER_IMAGE_NAME'
                 
             }
         }
         stage('Deploying and Cleaning') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker image rm hoangledinh65/nodejs-image:1.0 || echo "this image does not exist" '
+                sh 'docker image rm $DOCKER_IMAGE_NAME || echo "this image does not exist" '
                 sh 'docker container stop my-demo-nodejs || echo "this container does not exist" '
                 sh 'docker network create jenkins || echo "this network exists"'
                 sh 'echo y | docker container prune '
                 sh 'echo y | docker image prune'
-                sh 'docker container run -d --rm --name my-demo-nodejs -p 3000:8080 --network jenkins hoangledinh65/nodejs-image:1.0'
+                sh 'docker container run -d --rm --name my-demo-nodejs -p 3000:8080 --network jenkins $DOCKER_IMAGE_NAME'
             }
         }
     }
