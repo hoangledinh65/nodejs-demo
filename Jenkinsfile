@@ -9,7 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS=credentials('dockerhub')
         DOCKER_IMAGE_NAME = 'hoangledinh65/nodejs-image:1.0'
-        PARAM1 = $DEPLOY_ENV
+        PARAM1 = ''
     }
     parameters { string(name: 'DEPLOY_ENV', defaultValue: 'staging', description: '') }
     stages {
@@ -20,6 +20,7 @@ pipeline {
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
                     echo $PARAM1
+                    PARAM1=$DEPLOY_ENV
                     echo $BRANCH_NAME
                 ''' 
             }
