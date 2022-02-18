@@ -21,6 +21,7 @@ pipeline {
                     echo "M2_HOME = ${M2_HOME}"
                     echo $PARAM1
                     PARAM1=$DEPLOY_ENV
+                    echo $PARAM1
                     echo $BRANCH_NAME
                 ''' 
             }
